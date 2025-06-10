@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import re
+import pythainlp
 from pythainlp.tokenize import word_tokenize
 from pythainlp.corpus.common import thai_stopwords
 import matplotlib as mpl
