@@ -10,7 +10,7 @@ matplotlib
 pythainlp
 numpy
 seaborn
-scikit-learn
+scikit-learn==1.6.1
 pillow
 requests
 dill
