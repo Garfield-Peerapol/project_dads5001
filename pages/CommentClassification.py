@@ -19,7 +19,7 @@ elif option == "🧪 ML Modeling":
     st.write(f"คุณเลือกโมเดล: {model_type}")
     # โหลด stopwords ภาษาไทย
 
-    df = pd.read_csv(uploaded_file)
+    df = pd.read_csv('predict_data.csv')
     #st.success("โหลดไฟล์สำเร็จ!")
     #st.write("📌 ตัวอย่างข้อมูล:")
     st.dataframe(df.head(10))
