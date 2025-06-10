@@ -59,14 +59,14 @@ elif option == "🧪 ML Modeling":
 
     #select random forest
     if model_type=="Random Forest":
-        def load_all_models():
+        def load_all_models_rf():
             model = joblib.load('pages/final_model_rf.pkl')
             vectorizer = joblib.load('pages/vectorizer_rf.pkl')
             encoder = joblib.load('pages/label_encoder_rf.pkl')
             selector = joblib.load('pages/selector_rf.pkl')
             return model, vectorizer, encoder, selector
             
-        model, vectorizer, encoder, selector = load_all_models()
+        model, vectorizer, encoder, selector = load_all_models_rf()
 
         #processing and predict data
         cleaned_texts = [clean_text_combined(text) for text in df.iloc[:,0]]
@@ -77,14 +77,14 @@ elif option == "🧪 ML Modeling":
 
     #select Neural Network
     if model_type=="Neural Network":
-        def load_all_models():
+        def load_all_models_NN():
             model = joblib.load('pages/final_model_NN.pkl')
             vectorizer = joblib.load('pages/vectorizer_NN.pkl')
             encoder = joblib.load('pages/label_encoder_NN.pkl')
             selector = joblib.load('pages/selector_NN.pkl')
             return model, vectorizer, encoder, selector
             
-        model, vectorizer, encoder, selector = load_all_models()
+        model, vectorizer, encoder, selector = load_all_models_NN()
 
         #processing and predict data
         cleaned_new_texts = [clean_text_combined(text) for text in df.iloc[:,0]]
