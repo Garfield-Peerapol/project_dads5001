@@ -66,7 +66,7 @@ elif option == "🧪 ML Modeling":
             selector = joblib.load('pages/selector_rf.pkl')
             return model, vectorizer, encoder, selector
             
-        from pythainlp.tokenize import word_tokenize
+    
         model, vectorizer, encoder, selector = load_all_models_rf()
 
         #processing and predict data
