@@ -17,6 +17,8 @@ elif option == "🧪 ML Modeling":
     # เลือก model (Random Forest, Neural Network, etc.)
     model_type = st.selectbox("เลือกโมเดล", ["Random Forest", "Neural Network"])
     st.write(f"คุณเลือกโมเดล: {model_type}")
+        if model_type=="Random forest":
+            st.write("select 1")
 
 
 
