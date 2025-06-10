@@ -59,6 +59,7 @@ elif option == "🧪 ML Modeling":
 
     #select random forest
     if model_type=="Random Forest":
+        """
         def load_all_models_rf():
             model = joblib.load('pages/final_model_rf.pkl')
             vectorizer = joblib.load('pages/vectorizer_rf.pkl')
@@ -75,7 +76,18 @@ elif option == "🧪 ML Modeling":
         selected_features = selector.transform(vect_texts)
         predictions = model.predict(selected_features)
         decoded_predictions = encoder.inverse_transform(predictions)
+    """
 
+        result = subprocess.run(
+                ["python", "pages/app_rf.py"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            st.success("✅ รันไฟล์สำเร็จ!")
+            st.text("📄 stdout:")
+            st.code(result.stdout)
+    
     #select Neural Network
     if model_type=="Neural Network":
         def load_all_models_NN():
