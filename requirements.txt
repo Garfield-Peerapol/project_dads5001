@@ -8,3 +8,9 @@ joblib
 wordcloud 
 matplotlib
 pythainlp
+numpy
+seaborn
+scikit-learn
+pillow
+requests
+dill
