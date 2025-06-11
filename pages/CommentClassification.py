@@ -81,8 +81,6 @@ elif option == "🧪 ML Modeling":
         decoded_predictions = encoder.inverse_transform(predictions)
     
     """
-
-
     #select Neural Network
     if model_type=="Neural Network":
         def load_all_models_NN():
