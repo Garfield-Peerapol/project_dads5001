@@ -40,7 +40,11 @@ def clean_text_combined(text):
         filtered_tokens = [token for token in unique_tokens if token not in thai_stopwords_set and token.strip()]
         return " ".join(filtered_tokens)
     return text
+    
+    def thai_tokenizer(text):
+        return word_tokenize(text, engine="newmm")
 
+vectorizer.tokenizer = thai_tokenizer
 # Load model & tools
 @st.cache_resource
 def load_all_models():
@@ -51,6 +55,7 @@ def load_all_models():
     return model, vectorizer, encoder, selector
 
 model, vectorizer, encoder, selector = load_all_models()
+vectorizer.tokenizer = thai_tokenizer
 
 # Title
 st.title("🔍 ระบบจำแนกข้อความด้วย Random Forest")
