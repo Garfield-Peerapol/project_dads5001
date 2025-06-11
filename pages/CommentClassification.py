@@ -80,7 +80,7 @@ elif option == "🧪 ML Modeling":
         predictions = model.predict(selected_features)
         decoded_predictions = encoder.inverse_transform(predictions)
     
-    """
+    
     #select Neural Network
     if model_type=="Neural Network":
         def load_all_models_NN():
@@ -92,6 +92,7 @@ elif option == "🧪 ML Modeling":
             
         from pythainlp.tokenize import word_tokenize
         model, vectorizer, encoder, selector = load_all_models_NN()
+        vectorizer.tokenizer = thai_tokenizer
 
         #processing and predict data
         cleaned_new_texts = [clean_text_combined(text) for text in df.iloc[:,0]]
@@ -100,7 +101,7 @@ elif option == "🧪 ML Modeling":
         new_predictions_probs = model.predict(selected_features_new_texts)
         new_predictions_classes = np.argmax(new_predictions_probs, axis=1)
         decoded_predictions = encoder.inverse_transform(new_predictions_classes)
-    """
+    
     
     # แสดงผลลัพธ์
     results_df = pd.DataFrame({
