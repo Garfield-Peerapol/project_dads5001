@@ -56,10 +56,12 @@ elif option == "🧪 ML Modeling":
             unique_tokens = [token for token in tokens if not (token in seen or seen.add(token))]
             filtered_tokens = [token for token in unique_tokens if token not in thai_stopwords_set and token.strip()]
             return " ".join(filtered_tokens)
-
+    def thai_tokenizer(text):
+        return word_tokenize(text, engine="newmm")
+    vectorizer.tokenizer = thai_tokenizer
     #select random forest
     if model_type=="Random Forest":
-        """
+        
         def load_all_models_rf():
             model = joblib.load('pages/final_model_rf.pkl')
             vectorizer = joblib.load('pages/vectorizer_rf.pkl')
@@ -69,6 +71,7 @@ elif option == "🧪 ML Modeling":
             
     
         model, vectorizer, encoder, selector = load_all_models_rf()
+        vectorizer.tokenizer = thai_tokenizer
 
         #processing and predict data
         cleaned_texts = [clean_text_combined(text) for text in df.iloc[:,0]]
@@ -76,18 +79,10 @@ elif option == "🧪 ML Modeling":
         selected_features = selector.transform(vect_texts)
         predictions = model.predict(selected_features)
         decoded_predictions = encoder.inverse_transform(predictions)
+    
     """
 
-        result = subprocess.run(
-                ["python", "pages/app_rf.py"],
-                capture_output=True,
-                text=True,
-                check=True
-            )
-            st.success("✅ รันไฟล์สำเร็จ!")
-            st.text("📄 stdout:")
-            st.code(result.stdout)
-    
+
     #select Neural Network
     if model_type=="Neural Network":
         def load_all_models_NN():
@@ -107,7 +102,8 @@ elif option == "🧪 ML Modeling":
         new_predictions_probs = model.predict(selected_features_new_texts)
         new_predictions_classes = np.argmax(new_predictions_probs, axis=1)
         decoded_predictions = encoder.inverse_transform(new_predictions_classes)
-
+    """
+    
     # แสดงผลลัพธ์
     results_df = pd.DataFrame({
         'ข้อความต้นฉบับ': df.iloc[:,0],
