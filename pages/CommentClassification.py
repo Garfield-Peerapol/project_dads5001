@@ -7,6 +7,7 @@ from pythainlp.tokenize import word_tokenize
 from pythainlp.corpus.common import thai_stopwords
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from keras.models import load_model
 
 st.title("🧠 Comment Classification")
 
