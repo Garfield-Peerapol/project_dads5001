@@ -84,7 +84,8 @@ elif option == "🧪 ML Modeling":
     #select Neural Network
     if model_type=="Neural Network":
         def load_all_models_NN():
-            model = joblib.load('pages/final_model_NN.pkl')
+            model = load_model('pages/final_model_NN.keras') 
+            #model = joblib.load('pages/final_model_NN.pkl')
             vectorizer = joblib.load('pages/vectorizer_NN.pkl')
             encoder = joblib.load('pages/label_encoder_NN.pkl')
             selector = joblib.load('pages/selector_NN.pkl')
