@@ -58,7 +58,7 @@ elif option == "🧪 ML Modeling":
             return " ".join(filtered_tokens)
     def thai_tokenizer(text):
         return word_tokenize(text, engine="newmm")
-    vectorizer.tokenizer = thai_tokenizer
+
     #select random forest
     if model_type=="Random Forest":
         
