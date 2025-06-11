@@ -8,7 +8,7 @@ joblib
 wordcloud 
 matplotlib
 pythainlp
-numpy
+numpy<2.0
 seaborn
 scikit-learn==1.6.1
 pillow
