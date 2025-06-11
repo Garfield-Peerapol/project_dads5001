@@ -44,10 +44,10 @@ def clean_text_combined(text):
 # Load model & tools
 @st.cache_resource
 def load_all_models():
-    model = joblib.load('final_model_rf.pkl')
-    vectorizer = joblib.load('vectorizer_rf.pkl')
-    encoder = joblib.load('label_encoder_rf.pkl')
-    selector = joblib.load('selector_rf.pkl')
+    model = joblib.load('pages/final_model_rf.pkl')
+    vectorizer = joblib.load('pages/vectorizer_rf.pkl')
+    encoder = joblib.load('pages/label_encoder_rf.pkl')
+    selector = joblib.load('pages/selector_rf.pkl')
     return model, vectorizer, encoder, selector
 
 model, vectorizer, encoder, selector = load_all_models()
