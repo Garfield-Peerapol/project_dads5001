@@ -44,7 +44,6 @@ def clean_text_combined(text):
     def thai_tokenizer(text):
         return word_tokenize(text, engine="newmm")
 
-vectorizer.tokenizer = thai_tokenizer
 # Load model & tools
 @st.cache_resource
 def load_all_models():
