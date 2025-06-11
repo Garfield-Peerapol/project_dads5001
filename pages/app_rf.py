@@ -41,8 +41,8 @@ def clean_text_combined(text):
         return " ".join(filtered_tokens)
     return text
     
-    def thai_tokenizer(text):
-        return word_tokenize(text, engine="newmm")
+def thai_tokenizer(text):
+    return word_tokenize(text, engine="newmm")
 
 # Load model & tools
 @st.cache_resource
