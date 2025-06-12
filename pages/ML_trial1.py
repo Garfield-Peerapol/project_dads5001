@@ -27,7 +27,8 @@ def remove_emojis_and_symbols(text):
         u"\U000024C2-\U0001F251"
         "]+", flags=re.UNICODE)
     text = emoji_pattern.sub(r'', text)
-    text = re.sub(r"[^\u0E00-\u0E7Fa-zA-Z0-9\\s]", "", text)
+    # Corrected regex for general symbols to avoid SyntaxWarning
+    text = re.sub(r"[^\u0E00-\u0E7Fa-zA-Z0-9\s]", "", text)
     return text
 
 def clean_text_combined(text):
@@ -57,24 +58,26 @@ def load_all_models(model_type):
     else:
         raise ValueError(f"Invalid model type: {model_type}")
 
-    vectorizer.tokenizer = thai_tokenizer
+    # Assign tokenizer directly, if not already set by joblib load
+    if hasattr(vectorizer, 'tokenizer'):
+        vectorizer.tokenizer = thai_tokenizer
     return model, vectorizer, encoder, selector
 
 @st.cache_data
-def process_and_predict(df, model, vectorizer, selector, model_type):
+def process_and_predict(df, _model, _vectorizer, _selector, model_type, _encoder): # Added underscore to encoder too
     cleaned_texts = [clean_text_combined(text) for text in df.iloc[:, 0]]
-    vect_texts = vectorizer.transform(cleaned_texts)
-    selected_features = selector.transform(vect_texts)
+    vect_texts = _vectorizer.transform(cleaned_texts)
+    selected_features = _selector.transform(vect_texts)
 
     if model_type == "Neural Network":
-        predictions_probs = model.predict(selected_features)
+        predictions_probs = _model.predict(selected_features)
         predictions_classes = np.argmax(predictions_probs, axis=1)
-        decoded_predictions = encoder.inverse_transform(predictions_classes)
+        decoded_predictions = _encoder.inverse_transform(predictions_classes)
         probabilities = np.max(predictions_probs, axis=1)  # Get max probability for each prediction
     else:  # Random Forest
-        predictions = model.predict(selected_features)
-        decoded_predictions = encoder.inverse_transform(predictions)
-        probabilities = model.predict_proba(selected_features).max(axis=1) # Get max probability
+        predictions = _model.predict(selected_features)
+        decoded_predictions = _encoder.inverse_transform(predictions)
+        probabilities = _model.predict_proba(selected_features).max(axis=1) # Get max probability
 
     return decoded_predictions, probabilities
 
@@ -100,18 +103,19 @@ elif option == "🧪 ML Modeling":
         st.success("โหลดไฟล์สำเร็จ!")
         st.dataframe(df.head(10))
     except FileNotFoundError:
-        st.error("Error: predict_data.csv not found in pages/ directory.")
+        st.error("Error: predict_data.csv not found in pages/ directory. Please ensure it's there.")
         st.stop()
 
     # Model Selection
     model_type = st.selectbox("เลือกโมเดล", ["Random Forest", "Neural Network"])
-    st.write(f"คุณเลือกโมเดล: {model_type}")
+    st.write(f"คุณเลือกโมเดล: **{model_type}**")
 
     if st.button("Run Prediction"):
         with st.spinner(f"Running prediction with {model_type}..."):
             try:
                 model, vectorizer, encoder, selector = load_all_models(model_type)
-                decoded_predictions, probabilities = process_and_predict(df, model, vectorizer, selector, model_type)
+                # Pass underscore prefixed arguments when calling the cached function
+                decoded_predictions, probabilities = process_and_predict(df, model, vectorizer, selector, model_type, encoder)
 
                 # Store results in session state
                 st.session_state['results_df'] = pd.DataFrame({
@@ -128,49 +132,32 @@ elif option == "🧪 ML Modeling":
                 st.subheader("📊 Analysis Options")
                 analysis_option = st.selectbox(
                     "Select an analysis option:",
-                    ["", "Explore Results", "Visualize Prediction Distribution"] # Removed "Show Consistent Predictions"
+                    ["", "1. Explore Prediction Results", "2. Visualize Prediction Distribution"]
                 )
 
-                if analysis_option == "Explore Results":
-                    st.subheader("Explore Prediction Results")
+                if analysis_option == "1. Explore Prediction Results":
+                    st.subheader("1. Explore Prediction Results")
                     results_df = st.session_state['results_df']  # Access from session state
-                    label_choice = st.selectbox("Select Label:", ["All Labels"] + results_df['หมวดหมู่ที่ทำนายได้'].unique().tolist())
-                    num_samples = st.slider("Number of samples to display:", 5, min(100, len(results_df)), 10)
+                    
+                    if not results_df.empty:
+                        all_labels = results_df['หมวดหมู่ที่ทำนายได้'].unique().tolist()
+                        label_choice = st.selectbox("Select Label Type:", ["Show All Labels"] + all_labels)
+                        num_samples = st.slider("Number of samples to view:", 1, min(1000, len(results_df)), 50) # Adjusted max for sample size
 
-                    if label_choice == "All Labels":
-                        st.dataframe(results_df.head(num_samples))
+                        filtered_df = results_df.copy()
+                        if label_choice != "Show All Labels":
+                            filtered_df = filtered_df[filtered_df['หมวดหมู่ที่ทำนายได้'] == label_choice]
+                        
+                        if not filtered_df.empty:
+                            st.dataframe(filtered_df.sample(min(num_samples, len(filtered_df)), random_state=42).reset_index(drop=True))
+                        else:
+                            st.info("No results match the selected criteria.")
                     else:
-                        st.dataframe(results_df[results_df['หมวดหมู่ที่ทำนายได้'] == label_choice].head(num_samples))
+                        st.info("No prediction results available to explore.")
 
-                #elif analysis_option == "Show Consistent Predictions":
-                #    st.subheader("Show Consistent Predictions")
-                #    results_df = st.session_state['results_df'] # Access from session state
 
-                #    # For single model, there's no consistency to check.
-                #    st.info("Consistent predictions are only relevant when using multiple models.  Since you're using a single model, this option isn't applicable.")
-
-                elif analysis_option == "Visualize Prediction Distribution":
-                    st.subheader("Visualize Prediction Distribution")
+                elif analysis_option == "2. Visualize Prediction Distribution":
+                    st.subheader("2. Visualize Prediction Distribution")
                     results_df = st.session_state['results_df'] # Access from session state
 
-                    vis_type = st.selectbox("Select Visualization Type", ["Pie Chart", "Bar Chart (Probability)"])
-
-                    if vis_type == "Pie Chart":
-                        st.subheader("Pie Chart of Predicted Labels")
-                        label_counts = results_df['หมวดหมู่ที่ทำนายได้'].value_counts().reset_index()
-                        label_counts.columns = ['หมวดหมู่', 'จำนวน']
-                        fig_pie = px.pie(label_counts, values='จำนวน', names='หมวดหมู่', title='สัดส่วนของแต่ละหมวดหมู่')
-                        st.plotly_chart(fig_pie)
-
-                    elif vis_type == "Bar Chart (Probability)":
-                        st.subheader("Bar Chart of Predicted Labels with Probability")
-                        # Group by predicted label and calculate mean probability
-                        grouped_df = results_df.groupby('หมวดหมู่ที่ทำนายได้')['ความน่าจะเป็น'].mean().reset_index()
-                        fig_bar = px.bar(grouped_df, x='หมวดหมู่ที่ทำนายได้', y='ความน่าจะเป็น',
-                                        title='Mean Probability per Predicted Label',
-                                        labels={'หมวดหมู่ที่ทำนายได้': 'Predicted Label', 'ความน่าจะเป็น': 'Mean Probability'})
-                        st.plotly_chart(fig_bar)
-
-
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
+                    vis_type = st.selectbox("Select Visualization Type", ["Pie Chart", "Bar
