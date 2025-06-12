@@ -319,6 +319,8 @@ with col2:
         st.info("👆 กดปุ่ม 'โหลดโมเดลและเริ่มทำงาน' เพื่อเริ่มต้น")
 
 # Sidebar information
+"""
+
 with st.sidebar:
     st.header("ℹ️ ข้อมูลระบบ")
     st.write("**โมเดลที่รองรับ:**")
@@ -335,6 +337,8 @@ with st.sidebar:
     st.write("- vectorizer_NN.pkl")
     st.write("- label_encoder_NN.pkl")
     st.write("- selector_NN.pkl")
+
+
     
     if st.session_state.models_loaded:
         st.success("✅ ระบบพร้อมใช้งาน")
@@ -342,3 +346,5 @@ with st.sidebar:
             st.write(f"**ข้อมูลที่ประมวลผล:** {len(st.session_state.results_data['texts'])} รายการ")
     else:
         st.warning("⏳ รอการโหลดระบบ")
+
+"""
