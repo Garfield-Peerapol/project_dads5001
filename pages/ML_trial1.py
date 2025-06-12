@@ -318,33 +318,3 @@ with col2:
     else:
         st.info("👆 กดปุ่ม 'โหลดโมเดลและเริ่มทำงาน' เพื่อเริ่มต้น")
 
-# Sidebar information
-"""
-
-with st.sidebar:
-    st.header("ℹ️ ข้อมูลระบบ")
-    st.write("**โมเดลที่รองรับ:**")
-    st.write("- Random Forest")
-    st.write("- Neural Network")
-    
-    st.write("**ไฟล์ที่ต้องการ:**")
-    st.write("- predict_data.csv")
-    st.write("- final_model_rf.pkl")
-    st.write("- vectorizer_rf.pkl")
-    st.write("- label_encoder_rf.pkl")
-    st.write("- selector_rf.pkl")
-    st.write("- final_model_NN.keras")
-    st.write("- vectorizer_NN.pkl")
-    st.write("- label_encoder_NN.pkl")
-    st.write("- selector_NN.pkl")
-
-
-    
-    if st.session_state.models_loaded:
-        st.success("✅ ระบบพร้อมใช้งาน")
-        if st.session_state.results_data:
-            st.write(f"**ข้อมูลที่ประมวลผล:** {len(st.session_state.results_data['texts'])} รายการ")
-    else:
-        st.warning("⏳ รอการโหลดระบบ")
-
-"""
