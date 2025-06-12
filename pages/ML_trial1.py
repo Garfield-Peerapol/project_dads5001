@@ -8,7 +8,6 @@ from pythainlp.corpus.common import thai_stopwords
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from keras.models import load_model
-import time
 
 #1 load original data
 df = pd.read_csv('pages/predict_data.csv')
