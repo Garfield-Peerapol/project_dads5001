@@ -207,9 +207,9 @@ with col2:
             
             # Sample results
             if len(results_df) > num_samples:
-                display_df = results_df.sample(n=num_samples).reset_index(drop=True)
+                display_df = results_df.sample(n=num_samples).reset_index(drop=True).sort_values(by='ความมั่นใจสูงสุด', ascending=False)
             else:
-                display_df = results_df
+                display_df = results_df.sort_values(by='ความมั่นใจสูงสุด', ascending=False)
             
             st.dataframe(display_df, use_container_width=True)
             st.write(f"แสดง {len(display_df)} จาก {len(results_df)} รายการ")
